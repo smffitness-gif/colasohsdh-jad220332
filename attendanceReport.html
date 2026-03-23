@@ -2,47 +2,124 @@
 <html>
 
 <head>
-    <title>Report</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>THRC</title>
+
+    <!-- ✅ Mobile support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="img/logo.png">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial;
+            background: #eaf3ff;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: #0066cc;
+            color: white;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 10px;
+        }
+
+        .logo {
+            height: 40px;
+        }
+
+        .title {
+            flex: 1;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        /* ===== CENTER ===== */
+        .center {
+            text-align: center;
+        }
+
+        /* ===== LOGIN BOX ===== */
+        .login-box {
+            margin-top: 120px;
+        }
+
+        /* ===== INPUT ===== */
+        input {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            width: 250px;
+        }
+
+        /* ===== BUTTON ===== */
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            background: #0066cc;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #004a99;
+        }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 768px) {
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .title {
+                width: 100%;
+                margin-top: 5px;
+            }
+
+            input {
+                width: 90%;
+            }
+
+            button {
+                width: 90%;
+                max-width: 300px;
+            }
+
+            .login-box {
+                margin-top: 80px;
+            }
+        }
+    </style>
 </head>
 
-
 <body>
+
+    <!-- ===== HEADER ===== -->
     <header class="header">
-        <img src="img/thanthai-hans-roever-college-1.png" alt="Logo" class="logo">
-        <h2 class="center" style="padding-left: 35%;">Roevers College Attendance System</h2>
+        <img src="img/thanthai-hans-roever-college-1.png" class="logo">
+        <h2 class="title">Roevers College Attendance System</h2>
     </header>
 
+    <!-- ===== LOGIN ===== -->
+    <div class="center login-box">
+        <input id="loginUser" placeholder="Username"><br>
+        <input id="loginPass" type="password" placeholder="Password">
+    </div>
 
-    <h2 style="justify-content: center; text-align: center; color: aliceblue;">Attendance Report</h2>
+    <div class="center">
+        <button id="loginBtn">Login</button>
+    </div>
 
-    From <input type="date" id="fromDate">
-    To <input type="date" id="toDate">
+    <div id="loginMsg" class="center"></div>
 
-    <button onclick="generateReport()">Generate</button>
-    <button onclick="downloadPDF()">Download PDF</button>
-
-
-    <table border="1">
-        <thead>
-            <button class="red" onclick="location.href='departmentAdmin-dashboard.html'">Back</button>
-
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Total Days</th>
-                <th>Absent</th>
-                <th>Present</th>
-                <th>%</th>
-            </tr>
-        </thead>
-        <tbody id="reportBody"></tbody>
-    </table>
-
-
-    <script src="generateReport.js"></script>
+    <script src="login.js" defer></script>
 
 </body>
 
