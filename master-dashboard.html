@@ -3,139 +3,285 @@
 
 <head>
   <title>Master Admin Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+
+  <!-- ✅ Mobile support -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial;
+      background: #eaf3ff;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: #0066cc;
+      color: white;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 10px;
+    }
+
+    .logo {
+      height: 40px;
+    }
+
+    .title {
+      flex: 1;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    /* ===== TOP BAR ===== */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 10px 20px;
+    }
+
+    .logout-button {
+      background: #d32f2f;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .logout-button:hover {
+      background: #a30000;
+    }
+
+    /* ===== SECTIONS ===== */
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+
+    h1, h3 {
+      text-align: center;
+    }
+
+    /* ===== TABLE ===== */
+    .table-wrapper {
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 500px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background: #0066cc;
+      color: white;
+    }
+
+    /* ===== BUTTON ===== */
+    button {
+      padding: 8px 12px;
+      margin: 4px;
+      border: none;
+      border-radius: 6px;
+      background: #0066cc;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #004a99;
+    }
+
+    /* ===== ALERT ===== */
+    .alert {
+      color: red;
+      font-weight: bold;
+    }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 768px) {
+
+      .header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .title {
+        width: 100%;
+        margin-top: 5px;
+      }
+
+      .top-bar {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      button {
+        width: 90%;
+        max-width: 300px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+
+  <!-- HEADER -->
   <header class="header">
-    <img src="img/thanthai-hans-roever-college-1.png" alt="Logo" class="logo">
-    <h2 class="center" style="padding-left: 35%;">Roevers College Attendance System</h2>
+    <img src="img/thanthai-hans-roever-college-1.png" class="logo">
+    <h2 class="title">Roevers College Attendance System</h2>
   </header>
 
-  <label class="headers">
-    <h1 style="text-align: center;right: 0px;">Master Admin Dashboard</h1>
-    <button class="red logout-button" onclick="logout()">Logout</button>
-
-  </label>
-
-  <!-- Attendance Alerts -->
-  <div id="alerts">
-    <h3>Attendance Alerts (Today)</h3>
-    <ul id="alertList" style="color: rgb(255, 0, 0);"></ul>
+  <!-- TOP -->
+  <div class="top-bar">
+    <h1>Master Admin Dashboard</h1>
+    <button class="logout-button" onclick="logout()">Logout</button>
   </div>
 
-  <!-- Attendance Log Table -->
-  <div id="attendanceLogSection">
-    <h3>Attendance Log (Today Not Marked)</h3>
+  <!-- MAIN -->
+  <div class="container">
 
-    <table>
-      <thead>
-        <tr>
-          <th>Department</th>
-          <th>Missing Years</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody id="attendanceLogBody"></tbody>
-    </table>
-  </div>
+    <!-- ALERTS -->
+    <div class="card">
+      <h3>Attendance Alerts (Today)</h3>
+      <ul id="alertList"></ul>
+    </div>
 
-  <!-- Departments Section -->
-  <div id="departmentsSection">
-    <h3>Departments</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Department</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="departmentsTable"></tbody>
-    </table>
+    <!-- ATTENDANCE LOG -->
+    <div class="card">
+      <h3>Attendance Log (Not Marked Today)</h3>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Department</th>
+              <th>Missing Years</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="attendanceLogBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DEPARTMENTS -->
+    <div class="card">
+      <h3>Departments</h3>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Department</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="departmentsTable"></tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 
   <script>
-
     const BASE_URL = "https://attendancesystem-in29.onrender.com/api";
     const token = localStorage.getItem("token");
 
-    // Load departments
     async function loadDepartments() {
       try {
         const res = await fetch(`${BASE_URL}/departments`, {
           headers: { "Authorization": "Bearer " + token }
         });
+
         const departments = await res.json();
         const tbody = document.getElementById("departmentsTable");
         tbody.innerHTML = "";
+
         departments.forEach(dept => {
           const tr = document.createElement("tr");
           tr.innerHTML = `
-        <td>${dept}</td>
-        <td>
-          <button onclick="viewStudents('${dept}')">View Students</button>
-          <button onclick="viewAttendanceLog('${dept}')">Attendance Log</button>
-        </td>
-      `;
+            <td>${dept}</td>
+            <td>
+              <button onclick="viewStudents('${dept}')">Students</button>
+              <button onclick="viewAttendanceLog('${dept}')">Log</button>
+            </td>
+          `;
           tbody.appendChild(tr);
         });
+
       } catch (err) {
-        console.error(err);
         alert("Failed to load departments");
       }
     }
 
-    // Load attendance alerts
     async function loadAlerts() {
       try {
         const res = await fetch(`${BASE_URL}/attendance-alert`, {
           headers: { "Authorization": "Bearer " + token }
         });
-        const data = await res.json();
 
-        // Attendance Alerts (single message per department)
+        const data = await res.json();
         const ul = document.getElementById("alertList");
         ul.innerHTML = "";
 
         if (!data.missingClasses || data.missingClasses.length === 0) {
-          ul.innerHTML = "<li>All classes have marked attendance today ✅</li>";
+          ul.innerHTML = "<li>All classes marked attendance today ✅</li>";
         } else {
-          // Group years by department
           const deptMap = {};
+
           data.missingClasses.forEach(item => {
             if (!deptMap[item.department]) deptMap[item.department] = [];
             deptMap[item.department].push(item.year);
           });
 
-          // Render messages
-          for (const [department, years] of Object.entries(deptMap)) {
-            const li = document.createElement("li");
-            li.className = "alert";
-            li.innerText = `⚠️ Department: ${department}, Year: ${years.join(", ")} has not marked attendance today`;
-            ul.appendChild(li);
-          }
-
-          // Also populate Attendance Log Table
           const logBody = document.getElementById("attendanceLogBody");
           logBody.innerHTML = "";
+
           for (const [department, years] of Object.entries(deptMap)) {
+
+            const li = document.createElement("li");
+            li.className = "alert";
+            li.innerText =
+              `⚠️ ${department} - Year ${years.join(", ")} not marked attendance`;
+            ul.appendChild(li);
+
             const tr = document.createElement("tr");
             tr.innerHTML = `
-          <td>${department}</td>
-          <td>${years.join(", ")}</td>
-          <td>${data.date}</td>
-        `;
+              <td>${department}</td>
+              <td>${years.join(", ")}</td>
+              <td>${data.date}</td>
+            `;
             logBody.appendChild(tr);
           }
         }
 
       } catch (err) {
-        console.error(err);
-        alert("Failed to load attendance alerts");
+        alert("Failed to load alerts");
       }
     }
 
-    // Navigation functions
     function viewStudents(department) {
       localStorage.setItem("madmin_department", department);
       window.location.href = "madmin_students.html";
@@ -146,18 +292,14 @@
       window.location.href = "madmin_attendance_log.html";
     }
 
-    // Initialize
-    loadDepartments();
-    loadAlerts();
-
-    // Auto-refresh alerts every 5 minutes
-    setInterval(loadAlerts, 5 * 60 * 1000);
-
-    //Logout
     function logout() {
       localStorage.clear();
       window.location.href = "index.html";
     }
+
+    loadDepartments();
+    loadAlerts();
+    setInterval(loadAlerts, 5 * 60 * 1000);
   </script>
 
 </body>
