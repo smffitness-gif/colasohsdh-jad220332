@@ -9,13 +9,13 @@ body {
 /* ===== HEADER ===== */
 .header {
     width: 100%;
-    min-height: 60px;
     background: #0066cc;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 10px;
     color: white;
-    flex-wrap: wrap; /* 🔥 important */
+    flex-wrap: wrap;
 }
 
 .logo {
@@ -35,11 +35,11 @@ body {
     padding: 15px;
 }
 
-/* ===== INPUT ===== */
+/* ===== INPUT & SELECT ===== */
 input, select {
     padding: 10px;
     margin: 8px 0;
-    width: 100%; /* 🔥 important */
+    width: 100%;
     max-width: 300px;
     border-radius: 6px;
     border: 1px solid #ccc;
@@ -49,7 +49,7 @@ input, select {
 button {
     padding: 10px;
     margin: 6px;
-    width: 100%; /* 🔥 mobile full width */
+    width: 100%;
     max-width: 300px;
     border: none;
     border-radius: 6px;
@@ -62,15 +62,24 @@ button:hover {
     background: #004a99;
 }
 
+/* ===== RED BUTTON ===== */
+.red {
+    background: #d32f2f;
+}
+
+.red:hover {
+    background: #a30000;
+}
+
 /* ===== TABLE ===== */
 .table-wrapper {
     width: 100%;
-    overflow-x: auto; /* 🔥 important */
+    overflow-x: auto;
 }
 
 table {
     width: 100%;
-    min-width: 500px; /* 🔥 prevents breaking */
+    min-width: 500px;
     border-collapse: collapse;
 }
 
@@ -80,7 +89,12 @@ th, td {
     text-align: center;
 }
 
-/* ===== MOBILE FIX ===== */
+th {
+    background: #0066cc;
+    color: white;
+}
+
+/* ===== MOBILE ===== */
 @media (max-width: 768px) {
 
     .header {
@@ -89,6 +103,7 @@ th, td {
     }
 
     .title {
+        width: 100%;
         font-size: 14px;
         margin-top: 5px;
     }
@@ -98,11 +113,7 @@ th, td {
         padding: 10px;
     }
 
-    button {
-        width: 90%;
-    }
-
-    input {
+    input, button, select {
         width: 90%;
     }
 }
@@ -110,11 +121,7 @@ th, td {
 /* ===== DESKTOP ===== */
 @media (min-width: 768px) {
 
-    button {
-        width: auto;
-    }
-
-    input {
+    input, button, select {
         width: auto;
     }
 }
