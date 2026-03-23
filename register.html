@@ -4,37 +4,139 @@
 <head>
 
     <title>Register</title>
-    <link rel="stylesheet" href="style.css">
+
+    <!-- ✅ Mobile support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial;
+            background: #eaf3ff;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: #0066cc;
+            color: white;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 10px;
+        }
+
+        .logo {
+            height: 40px;
+        }
+
+        .title {
+            flex: 1;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* ===== INPUT ===== */
+        input {
+            padding: 10px;
+            margin: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        /* ===== BUTTON ===== */
+        button {
+            padding: 10px 18px;
+            margin: 6px;
+            border: none;
+            border-radius: 6px;
+            background: #0066cc;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #004a99;
+        }
+
+        .red {
+            background: #d32f2f;
+        }
+
+        .red:hover {
+            background: #a30000;
+        }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 768px) {
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .title {
+                width: 100%;
+                margin-top: 5px;
+            }
+
+            input {
+                width: 90%;
+            }
+
+            button {
+                width: 90%;
+                max-width: 300px;
+            }
+
+            form {
+                width: 100%;
+            }
+        }
+    </style>
+
 </head>
 
 <body>
+
+    <!-- HEADER -->
     <header class="header">
-        <img src="img/thanthai-hans-roever-college-1.png" alt="Logo" class="logo">
-        <h2 class="center" style="padding-left: 35%;">Roevers College Attendance System</h2>
+        <img src="img/thanthai-hans-roever-college-1.png" class="logo">
+        <h2 class="title">Roevers College Attendance System</h2>
     </header>
 
-
-    <div class="container center">
+    <!-- MAIN -->
+    <div class="container">
 
         <h3>Register Student</h3>
 
-        <input id="studentName" placeholder="Student Name">
+        <input id="studentName" placeholder="Student Name"><br>
         <input id="studentId" placeholder="Student ID"><br>
-        <!-- Excel opeartion-->
+
+        <!-- FILE UPLOAD -->
         <form id="uploadForm">
-            <input type="file" name="file" id="file" accept=".xls,.xlsx" required>
+            <input type="file" name="file" id="file" accept=".xls,.xlsx" required><br>
             <button type="submit">Upload</button>
         </form>
 
         <div id="result"></div>
 
+        <br>
+
         <button onclick="addStudent()">Add</button>
         <button class="red" onclick="location.href='departmentAdmin-dashboard.html'">Back</button>
 
     </div>
-    <script src="registerStudents.js">
 
-    </script>
+    <script src="registerStudents.js"></script>
+
 </body>
 
 </html>
