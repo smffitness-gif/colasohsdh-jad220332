@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Attendance Alerts - Master Admin</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 70%;
+      margin: auto;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .alert {
+      color: red;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .ok {
+      color: green;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Attendance Alerts - Master Admin</h1>
+
+  <header class="header">
+    <img src="img/thanthai-hans-roever-college-1.png" alt="Logo" class="logo">
+    <h2 class="center" style="padding-left: 35%;">Roevers College Attendance System</h2>
+  </header>
+
+  <div id="statusMessage"></div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Department</th>
+        <th>Year</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody id="alertTable"></tbody>
+  </table>
+
+  <script>
+    const BASE_URL = "https://attendancesystem-in29.onrender.com/api";
+    const token = localStorage.getItem("token");
+
+    async function loadAttendanceAlerts() {
+      try {
+        const res = await fetch(`${BASE_URL}/master/attendance-alert`, {
+          headers: { Authorization: "Bearer " + token }
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch attendance alerts");
+
+        const data = await res.json();
+        const tbody = document.getElementById("alertTable");
+        const statusDiv = document.getElementById("statusMessage");
+        tbody.innerHTML = "";
+
+        if (!data.missingClasses.length) {
+          statusDiv.innerHTML = `<div class="ok">All classes marked attendance today ✅</div>`;
+          return;
+        }
+
+        statusDiv.innerHTML = `<div class="alert">Some classes have NOT marked attendance today ❌</div>`;
+
+        data.missingClasses.forEach(item => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+                <td>${item.department}</td>
+                <td>${item.year}</td>
+                <td>${data.date}</td>
+            `;
+          tbody.appendChild(tr);
+        });
+
+      } catch (err) {
+        console.error(err);
+        alert("Failed to load attendance alerts: " + err.message);
+      }
+    }
+
+    // Load on page ready
+    document.addEventListener("DOMContentLoaded", loadAttendanceAlerts);
+  </script>
+
+</body>
+
+</html>

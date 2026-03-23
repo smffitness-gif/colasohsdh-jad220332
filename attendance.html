@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Attendance Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="header">
+        <img src="img/thanthai-hans-roever-college-1.png" alt="Logo" class="logo">
+        <h2 class="center" style="padding-left: 35%;">Roevers College Attendance System</h2>
+    </header>
+
+    <div class="container">
+
+        <h2 style="text-align: center;">Attendance Marking</h2>
+
+        <label>Select Date:</label>
+        <input type="date" id="attendanceDate">
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Student Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="attendanceBody"></tbody>
+
+        </table>
+
+        <br>
+
+        <button onclick="saveAttendance()">Save Attendance</button>
+
+    </div>
+
+    <script src="attendance.js"></script>
+
+</body>
+
+</html>

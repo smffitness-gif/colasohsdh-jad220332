@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body onload="loadHome()">
+    <header class="header">
+        <img src="img/thanthai-hans-roever-college-1.png" alt="Logo" class="logo">
+        <h2 class="center" style="padding-left: 35%;">Roevers College Attendance System</h2>
+    </header>
+
+    <div class="container center">
+
+        <h3 id="userInfo"></h3>
+
+        <!-- Only Attendance and Logout for teacher -->
+        <button onclick="goToPage('attendance.html')">Attendance</button>
+        <button class="red" onclick="logout()">Logout</button>
+
+    </div>
+
+    <script>
+        // Get current user from localStorage
+        const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+        function loadHome() {
+            if (!currentUser) {
+                window.location.href = "index.html"; // not logged in
+                return;
+            }
+
+            if (currentUser.role !== "teacher") {
+                alert("Access denied. Only teachers can view this page.");
+                window.location.href = "index.html";
+                return;
+            }
+
+            document.getElementById("userInfo").innerText =
+                `${currentUser.department} Department - ${currentUser.role}`;
+        }
+
+        function goToPage(page) {
+            window.location.href = page;
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+
+</html>

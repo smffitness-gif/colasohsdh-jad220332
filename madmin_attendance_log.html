@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Attendance Log - Master Admin</title>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+  <header class="header">
+    <img src="img/thanthai-hans-roever-college-1.png" alt="Logo" class="logo">
+    <h2 class="center" style="padding-left: 35%;">Roevers College Attendance System</h2>
+  </header>
+
+  <h1 style="text-align: center;">Attendance Log - Master Admin</h1>
+
+  <label for="logDate">Select Date:</label>
+  <input type="date" id="logDate">
+  <button onclick="loadAttendanceLog()">Load</button>
+  <button onclick="downloadPDF()">Download PDF</button>
+  <button class="red" onclick="location.href='master-dashboard.html'">Back</button>
+
+
+  <table>
+    <thead>
+      <tr>
+        <th>Department</th>
+        <th>Date</th>
+        <th>Total Students</th>
+        <th>Present</th>
+        <th>Absent</th>
+      </tr>
+    </thead>
+    <tbody id="attendanceLogTable"></tbody>
+  </table>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+  <script>
+    const BASE_URL = "https://attendancesystem-in29.onrender.com/api";
+    const token = localStorage.getItem("token");
+    let attendanceData = []; // store fetched data for PDF
+
+    // Load attendance log
+    async function loadAttendanceLog() {
+      const date = document.getElementById("logDate").value;
+      try {
+        const res = await fetch(`${BASE_URL}/master/attendance-log${date ? '?date=' + date : ''}`, {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const log = await res.json();
+        attendanceData = log; // store for PDF
+        const tbody = document.getElementById("attendanceLogTable");
+        tbody.innerHTML = "";
+
+        if (!log.length) {
+          tbody.innerHTML = "<tr><td colspan='5'>No data found for selected date.</td></tr>";
+          return;
+        }
+
+        log.forEach(item => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+        <td>${item.department}</td>
+        <td>${item.date}</td>
+        <td>${item.totalStudents}</td>
+        <td>${item.present}</td>
+        <td>${item.absent}</td>
+      `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error(err);
+        alert("Failed to load attendance log: " + err.message);
+      }
+    }
+
+    // Download PDF
+    function downloadPDF() {
+      if (!attendanceData.length) {
+        alert("No data to download. Please load attendance log first.");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Header
+      doc.setFontSize(16);
+      doc.text("THANTHAI HANS ROEVER COLLEGE (AUTONOMOUS)", 14, 15);
+      doc.setFontSize(12);
+      doc.text("Affiliated to Bharathidasan University", 14, 22);
+      doc.text("Accredited with 'A' Grade by NAAC (3rd cycle) with CGPA 3.23 out of 4", 14, 28);
+      doc.text("ELAMBALUR(P.O), PERAMBALUR-621 220", 14, 34);
+      doc.text(`Attendance Log - Master Admin`, 14, 42);
+
+      // Table Columns
+      const columns = ["Department", "Date", "Total Students", "Present", "Absent"];
+      const rows = attendanceData.map(d => [
+        d.department,
+        d.date,
+        d.totalStudents,
+        d.present,
+        d.absent
+      ]);
+
+      doc.autoTable({
+        head: [columns],
+        body: rows,
+        startY: 50,
+        styles: { fontSize: 10 }
+      });
+
+      doc.save(`Attendance_Log_MasterAdmin.pdf`);
+    }
+
+    // Load today's log by default
+    document.addEventListener("DOMContentLoaded", () => {
+      const today = new Date().toISOString().slice(0, 10);
+      document.getElementById("logDate").value = today;
+      loadAttendanceLog();
+    });
+  </script>
+
+</body>
+
+</html>

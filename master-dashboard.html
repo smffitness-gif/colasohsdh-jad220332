@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Master Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header class="header">
+    <img src="img/thanthai-hans-roever-college-1.png" alt="Logo" class="logo">
+    <h2 class="center" style="padding-left: 35%;">Roevers College Attendance System</h2>
+  </header>
+
+  <label class="headers">
+    <h1 style="text-align: center;right: 0px;">Master Admin Dashboard</h1>
+    <button class="red logout-button" onclick="logout()">Logout</button>
+
+  </label>
+
+  <!-- Attendance Alerts -->
+  <div id="alerts">
+    <h3>Attendance Alerts (Today)</h3>
+    <ul id="alertList" style="color: rgb(255, 0, 0);"></ul>
+  </div>
+
+  <!-- Attendance Log Table -->
+  <div id="attendanceLogSection">
+    <h3>Attendance Log (Today Not Marked)</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Department</th>
+          <th>Missing Years</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="attendanceLogBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Departments Section -->
+  <div id="departmentsSection">
+    <h3>Departments</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Department</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="departmentsTable"></tbody>
+    </table>
+  </div>
+
+  <script>
+
+    const BASE_URL = "https://attendancesystem-in29.onrender.com/api";
+    const token = localStorage.getItem("token");
+
+    // Load departments
+    async function loadDepartments() {
+      try {
+        const res = await fetch(`${BASE_URL}/departments`, {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const departments = await res.json();
+        const tbody = document.getElementById("departmentsTable");
+        tbody.innerHTML = "";
+        departments.forEach(dept => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+        <td>${dept}</td>
+        <td>
+          <button onclick="viewStudents('${dept}')">View Students</button>
+          <button onclick="viewAttendanceLog('${dept}')">Attendance Log</button>
+        </td>
+      `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error(err);
+        alert("Failed to load departments");
+      }
+    }
+
+    // Load attendance alerts
+    async function loadAlerts() {
+      try {
+        const res = await fetch(`${BASE_URL}/attendance-alert`, {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const data = await res.json();
+
+        // Attendance Alerts (single message per department)
+        const ul = document.getElementById("alertList");
+        ul.innerHTML = "";
+
+        if (!data.missingClasses || data.missingClasses.length === 0) {
+          ul.innerHTML = "<li>All classes have marked attendance today ✅</li>";
+        } else {
+          // Group years by department
+          const deptMap = {};
+          data.missingClasses.forEach(item => {
+            if (!deptMap[item.department]) deptMap[item.department] = [];
+            deptMap[item.department].push(item.year);
+          });
+
+          // Render messages
+          for (const [department, years] of Object.entries(deptMap)) {
+            const li = document.createElement("li");
+            li.className = "alert";
+            li.innerText = `⚠️ Department: ${department}, Year: ${years.join(", ")} has not marked attendance today`;
+            ul.appendChild(li);
+          }
+
+          // Also populate Attendance Log Table
+          const logBody = document.getElementById("attendanceLogBody");
+          logBody.innerHTML = "";
+          for (const [department, years] of Object.entries(deptMap)) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+          <td>${department}</td>
+          <td>${years.join(", ")}</td>
+          <td>${data.date}</td>
+        `;
+            logBody.appendChild(tr);
+          }
+        }
+
+      } catch (err) {
+        console.error(err);
+        alert("Failed to load attendance alerts");
+      }
+    }
+
+    // Navigation functions
+    function viewStudents(department) {
+      localStorage.setItem("madmin_department", department);
+      window.location.href = "madmin_students.html";
+    }
+
+    function viewAttendanceLog(department) {
+      localStorage.setItem("madmin_department", department);
+      window.location.href = "madmin_attendance_log.html";
+    }
+
+    // Initialize
+    loadDepartments();
+    loadAlerts();
+
+    // Auto-refresh alerts every 5 minutes
+    setInterval(loadAlerts, 5 * 60 * 1000);
+
+    //Logout
+    function logout() {
+      localStorage.clear();
+      window.location.href = "index.html";
+    }
+  </script>
+
+</body>
+
+</html>

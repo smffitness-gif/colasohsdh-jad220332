@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="header">
+        <img src="img/thanthai-hans-roever-college-1.png" alt="Logo" class="logo">
+        <h2 class="center" style="padding-left: 35%;">Roevers College Attendance System</h2>
+    </header>
+
+
+    <div class="container center">
+
+        <h3>Register Student</h3>
+
+        <input id="studentName" placeholder="Student Name">
+        <input id="studentId" placeholder="Student ID"><br>
+        <!-- Excel opeartion-->
+        <form id="uploadForm">
+            <input type="file" name="file" id="file" accept=".xls,.xlsx" required>
+            <button type="submit">Upload</button>
+        </form>
+
+        <div id="result"></div>
+
+        <button onclick="addStudent()">Add</button>
+        <button class="red" onclick="location.href='departmentAdmin-dashboard.html'">Back</button>
+
+    </div>
+    <script src="registerStudents.js">
+
+    </script>
+</body>
+
+</html>
